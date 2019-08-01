@@ -5,7 +5,7 @@ import random
 
 import numpy as np
 
-fileName = '/Users/bhartimehta/PycharmProjects/AI-Image-Classification/Data/digitdata/trainingimages.txt'
+fileName = 'Data/digitdata/trainingimages.txt'
 f = open(fileName)
 lines = f.readlines()
 f.close()

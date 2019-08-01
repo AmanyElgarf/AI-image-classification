@@ -14,7 +14,7 @@ class ProcessData:
 
     def loadDigitImages(self, fileName):
         #make a list of each line from txt file
-        fileName = '/Users/bhartimehta/PycharmProjects/AI-Image-Classification/Data/digitdata/'+fileName
+        fileName = 'Data/digitdata/'+fileName
         f = open(fileName)
         lines = f.readlines()
         f.close()
@@ -48,7 +48,7 @@ class ProcessData:
 
 
     def makeDigitLabels(self, fileName):
-        fileName = '/Users/bhartimehta/PycharmProjects/AI-Image-Classification/Data/digitdata/'+fileName
+        fileName = 'Data/digitdata/'+fileName
         f = open(fileName)
         lines = f.readlines()
         f.close()
@@ -89,7 +89,7 @@ class ProcessData:
 
 
     def unpickleFile(self, fileName):
-        fileName = '/Users/bhartimehta/PycharmProjects/AI-Image-Classification/Data/ProcessedData/'+fileName
+        fileName = 'Data/ProcessedData/'+fileName
         f = open(fileName, "rb")
         data = pickle.load(f)
         return data
