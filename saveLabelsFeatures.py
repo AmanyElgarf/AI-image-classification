@@ -9,27 +9,32 @@ from ProcessData import ProcessData
 digitTestFeatures = ProcessData().loadDigitImages('testimages.txt')
 f = open('digitTestFeatures', "wb")
 pickle.dump(digitTestFeatures, f)
-
+f.close()
 
 digitTestLabels = ProcessData().loadDigitImages('testlabels.txt')
 f = open('digitTestLabels', "wb")
 pickle.dump(digitTestLabels, f)
+f.close()
 
 #read validation
 digitValidationFeatures = ProcessData().loadDigitImages('validationimages.txt')
 f = open('digitValidationFeatures', "wb")
 pickle.dump(digitValidationFeatures, f)
+f.close()
 
 
 digitValidationLabels = ProcessData().loadDigitImages('validationlabels.txt')
 f = open('digitValidationLabels', "wb")
 pickle.dump(digitValidationLabels, f)
+f.close()
 
 #read trainin
 digitTrainingFeatures = ProcessData().loadDigitImages('trainingimages.txt')
 f = open('digitTrainingFeatures', "wb")
 pickle.dump(digitTrainingFeatures, f)
+f.close()
 
 digitTrainingLabels = ProcessData().loadDigitImages('traininglabels.txt')
 f = open('digitTrainingLabels', "wb")
 pickle.dump(digitTrainingLabels, f)
+f.close()
