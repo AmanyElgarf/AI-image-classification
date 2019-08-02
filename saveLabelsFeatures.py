@@ -5,7 +5,6 @@ from ProcessData import ProcessData
 #read digits
 #read test
 
-
 digitTestFeatures = ProcessData().loadDigitImages('testimages.txt')
 f = open('digitTestFeatures', "wb")
 pickle.dump(digitTestFeatures, f)

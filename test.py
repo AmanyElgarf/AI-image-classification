@@ -1,8 +1,3 @@
-
-import numpy as np
-import random
-
-
 import numpy as np
 
 fileName = 'Data/digitdata/trainingimages.txt'
@@ -49,7 +44,7 @@ for image, ft in zip(imagez, features):
 
 print(features)
 
-fileName = '/Users/bhartimehta/PycharmProjects/AI-Image-Classification/Data/digitdata/traininglabels.txt'
+fileName = 'Data/digitdata/traininglabels.txt'
 f = open(fileName)
 lines = f.readlines()
 f.close()
