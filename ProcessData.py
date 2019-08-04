@@ -1,6 +1,6 @@
-
 import pickle
 import numpy as np
+
 
 class ProcessData:
     def __init__(self):
@@ -20,7 +20,7 @@ class ProcessData:
         f.close()
 
         #initialize 28x28 matrices for each image in the txt file (number of lines // 28 = number of images)
-        images = [np.zeros((28, 28)) for i in range( len(lines)//28 ) ]
+        images = [np.zeros((28, 28)) for i in range(len(lines)//28)]
 
 
         for image in images:
