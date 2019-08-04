@@ -238,49 +238,51 @@ r = 0
 w = 0
 
 
-for i in range(1000):
+for i in range(10):
     feature = ProcessFaceData('Data/digitdata/testimages.txt', 28).main()[i]
     amany = NaiveBayes(feature)
     amany.naive()
-    maxx = max(amany.probability_being_a_zero(),
-               amany.probability_being_a_one(),
-               amany.probability_being_a_two(),
-               amany.probability_being_a_three(),
-               amany.probability_being_a_four(),
-               amany.probability_being_a_five(),
-               amany.probability_being_a_six(),
-               amany.probability_being_a_seven(),
-               amany.probability_being_a_eight(),
-               amany.probability_being_a_nine())
+    zero = amany.probability_being_a_zero()
+    one = amany.probability_being_a_one()
+    two = amany.probability_being_a_two()
+    three = amany.probability_being_a_three()
+    four = amany.probability_being_a_four()
+    five = amany.probability_being_a_five()
+    six = amany.probability_being_a_six()
+    seven = amany.probability_being_a_seven()
+    eight = amany.probability_being_a_eight()
+    nine = amany.probability_being_a_nine()
 
-    if maxx == amany.probability_being_a_zero() and labels[i] == '0\n':
+    maxx = max(one, two, three, four, five, six, seven, eight, nine)
+
+    if maxx == zero and labels[i] == '0\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_one() and labels[i] == '1\n':
+    elif maxx == one and labels[i] == '1\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_two() and labels[i] == '2\n':
+    elif maxx == two and labels[i] == '2\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_three() and labels[i] == '3\n':
+    elif maxx == three and labels[i] == '3\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_four() and labels[i] == '4\n':
+    elif maxx == four and labels[i] == '4\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_five() and labels[i] == '5\n':
+    elif maxx == five and labels[i] == '5\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_six() and labels[i] == '6\n':
+    elif maxx == six and labels[i] == '6\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_seven() and labels[i] == '7\n':
+    elif maxx == seven and labels[i] == '7\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_eight() and labels[i] == '8\n':
+    elif maxx == eight and labels[i] == '8\n':
         r += 1
         print('correct')
-    elif maxx == amany.probability_being_a_nine() and labels[i] == '9\n':
+    elif maxx == nine and labels[i] == '9\n':
         r += 1
         print('correct')
     else:

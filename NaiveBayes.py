@@ -1,6 +1,8 @@
 from ProcessFaceData import ProcessFaceData
 from Labels import Labels
 import pickle
+from decimal import *
+
 
 
 class NaiveBayes:
@@ -19,19 +21,19 @@ class NaiveBayes:
         return no_of_labels
 
     def __probability_of_face(self):
-        return self.__labels()[1] / float(len(self.labels))
+        return Decimal(self.__labels()[1]) / Decimal(len(self.labels))
 
     def __probability_of_not_face(self):
-        return self.__labels()[0] / float(len(self.labels))
+        return Decimal(self.__labels()[0]) / Decimal(len(self.labels))
 
     def __feature_given_face(self, feature_frequency):
-        return float(feature_frequency)/float(self.__labels()[1])
+        return Decimal(feature_frequency)/Decimal(self.__labels()[1])
 
     def __feature_given_not_face(self, feature_frequency):
-        return float(feature_frequency)/float(self.__labels()[0])
+        return Decimal(feature_frequency)/Decimal(self.__labels()[0])
 
     def probability_being_a_face(self):
-        p = self.__probability_of_face()
+        p = Decimal(self.__probability_of_face())
         for i in range(len(self.feature)):
             feature_frequency = 0
             for k in range(len(self.face_data)):
@@ -39,12 +41,12 @@ class NaiveBayes:
                     if self.face_data[k][i] == self.feature[i]:
                         feature_frequency += 1
             if feature_frequency == 0:
-                feature_frequency += 0.1
-            p = p * self.__feature_given_face(feature_frequency)
+                feature_frequency += Decimal(60)
+            p = Decimal(p * self.__feature_given_face(feature_frequency))
         return p
 
     def probability_not_being_a_face(self):
-        p = self.__probability_of_not_face()
+        p = Decimal(self.__probability_of_not_face())
         for i in range(len(self.feature)):
             feature_frequency = 0
             for k in range(len(self.face_data)):
@@ -52,8 +54,8 @@ class NaiveBayes:
                     if self.face_data[k][i] == self.feature[i]:
                         feature_frequency += 1
             if feature_frequency == 0:
-                feature_frequency += 0.01
-            p = p * self.__feature_given_not_face(feature_frequency)
+                feature_frequency+= Decimal(60)
+            p = Decimal(p * self.__feature_given_not_face(feature_frequency))
         return p
 
     def naive(self):
@@ -72,16 +74,28 @@ for i in range(150):
     feature = ProcessFaceData('Data/facedata/facedatatest.txt', 70).main()[i]
     amany = NaiveBayes(feature)
     amany.naive()
-    maxx = max(amany.probability_being_a_face(), amany.probability_not_being_a_face())
-    if amany.probability_being_a_face() > amany.probability_not_being_a_face() and labels[i] == '1\n':
+    face = amany.probability_being_a_face()
+    notface = amany.probability_not_being_a_face()
+    maxx = max(face, notface)
+    if face > notface and labels[i] == '1\n':
         r += 1
-        print('correct')
-    elif amany.probability_being_a_face() < amany.probability_not_being_a_face() and labels[i] == '0\n':
+        print('correctone')
+        print('face', face)
+        print('not face', notface)
+        print('label', labels[i], '\n')
+    elif face < notface and labels[i] == '0\n':
         r += 1
-        print('correct')
+        print('correctzero')
+        print('face', face)
+        print('not face', notface)
+        print('label', labels[i], '\n')
 
     else:
         print('wrong')
+        print('face', face)
+        print('not face', notface)
+        print('label', labels[i], '\n')
+
 print(r)
 
 
