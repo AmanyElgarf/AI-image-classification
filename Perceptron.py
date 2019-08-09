@@ -1,92 +1,75 @@
 import numpy as np
-
-
-
+import timeit
 class Perceptron:
 
-    def __init__(self, layerSizes):
+    def __init__(self, layerSizes, learnRate):
         self.layerSizes = layerSizes
-        self.weight = [np.random.randn(s1, s) for s,s1 in zip(layerSizes,layerSizes[1:])]
-        self.bias = [np.random.randn(s, 1) for s in layerSizes[1:] ]
-        self.trainingData = None
-        self.validationData = None
-        self.testData = None
+        self.learnRate = learnRate
+        self.weight = np.array( np.random.randn(layerSizes[1], layerSizes[0]), dtype=np.float128 )
+        self.bias = np.array(np.random.randn(layerSizes[1],1), dtype=np.float128)
+        self.errorW = np.zeros(self.weight.shape)
+        self.errorB = np.zeros(self.bias.shape)
 
-    def learn(self, feature, label):
-        activationFuncs = [feature]
-        phiPerLayer = []
-        phi = feature
-        for w,b in self.weights, self.bias:
-            phi = np.matmul(w,phi)+b
-            phiPerLayer.append(phi)
+    def main(self, trainingFeatures, trainingLabels, percentTraining, cycles, validationFeatures, validationLabels):
+        trainingData = list(zip(trainingFeatures, trainingLabels))
+        np.random.shuffle(trainingData)
+        del trainingData[ len(trainingData)*percentTraining // 100 - 1 : len(trainingData) ]
+        np.asarray(trainingData)
 
-            ft = 1/ ( 1-np.exp(-phi) )
-            activationFuncs.append(ft)
+        avgAccuracy = 0
+        start_time = timeit.default_timer()
+        for j in range(0, cycles):
+            np.random.shuffle(trainingData)
+            for feature,label in trainingData:
+                self.logisticLearn(feature, label)
+        time = timeit.default_timer() - start_time
+        l = self.calculateAccuracy(validationFeatures, validationLabels)
+        print(l)
+        return time, l
 
-        error = [np.zeros(b.shape) for b in self.bias]
-        errorW = [np.zeros(w.shape) for w in self.weight]
-        differenceErr = activationFuncs[-1] - label
-        err = np.multiply( differenceErr, self.derivActivation( activationFuncs[-1] ) )
-        error[-1] = err
+    def linearLearn(self, trainingData):
+        self.errorW = np.zeros(self.weight.shape)
+        self.errorB = np.zeros(self.bias.shape)
+        for feature, label in trainingData:
+            prediction = np.dot(self.weight, feature) + self.bias
+            prediction = np.where(prediction<0, 0, 1)
+            err = label - prediction
+            self.errorB += err
+            self.errorW += np.dot( err, feature.transpose() )
+        self.weight = self.weight+self.learnRate*self.errorW
+        self.bias = self.bias+self.learnRate*self.errorB
 
+    def logisticLearn(self, feature, label):
+        prediction = self.getPrediction(feature)
+        err = (prediction-label)*((prediction)*(1-prediction))
+        self.weight = self.weight - self.learnRate * np.dot(err,feature.transpose())
+        self.bias = self.bias - self.learnRate * err
 
-        for i in range(len(self.layerSizes)-2,0,-1):
-            w = self.weight[i+1]
-            w = np.transpose(w)
-            deriv = self.derivActivation[ phi[i] ]
-            err = np.multiply( np.matmul(w,error[0]), deriv )
-            error[i] = err
-
-            aF = activationFuncs[i-1]
-            aF = np.transpose(aF)
-            errorW[i] = np.matmul(aF,err)
-
-        return errorW, error
-
-
-    def derivActivation(self, phi):
-        expo = np.exp(-phi)
-        derivative = -expo / ((1 - expo) ^ 2)
-        return derivative
-
-
-    def updateWeights(self, sampleData, learningRate):
-        totalChangeW = [np.zeros(w.shape) for w in self.weight]
-        totalChangeB = [np.zeros(b.shape) for b in self.bias]
-        size = len(sampleData)
-        for feature,label in sampleData:
-            changeW, changeB = self.learn(feature, label)
-            totalChangeW = [ (cW + sumW) for cW, sumW in zip(changeW, totalChangeW)]
-            totalChangeB = [ (cB + sumB) for cB, sumB in zip(changeB, totalChangeB)]
-
-        scalar = learningRate/size
-        self.weight = [ (w - scalar*tW) for w,tW in zip(self.weight, totalChangeW) ]
-        self.bias = [ (b - scalar*tB) for b,tB in zip(self.bias, totalChangeB) ]
-
-
-
-
-
-
-    def calculatePercentCorrect(self, imageData, labelData):
-
-        total = 0
-        wrong = 0
+    def calculateAccuracy(self, imageData, labelData):
+        correct = 0
         for image, label in zip(imageData,labelData):
             prediction = self.getPrediction(image)
-            value = np.where(label == np.amax(label))
-            total+=1
-            if (prediction != value):
-                wrong+=1
-
-        percent = (total-wrong)/total*100
-        print(percent)
+            if label.size == 1:
+                if np.where(prediction < .5, 0, 1) == label:
+                    correct += 1
+            elif np.argmax(prediction) == np.argmax(label):
+                correct+=1
+        percent = correct/len(labelData)*100
         return percent
 
     def getPrediction(self, feature):
-        for w,b in self.weights,self.bias:
-            ft = np.matmul(w,feature)+b
-            feature = 1/ ( 1-np.exp(-ft) )
+        f = np.dot(self.weight,feature)+self.bias
+        return 1.0/(1.0+np.exp(-f/100))
 
-        result = np.where(feature == np.amax(feature))
-        return result
+
+
+
+
+
+
+
+
+
+
+
+
