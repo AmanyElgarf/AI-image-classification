@@ -1,5 +1,3 @@
-
-import pickle
 import numpy as np
 
 class ProcessData:
@@ -152,11 +150,3 @@ class ProcessData:
                     if (x.finished): break
                 if (x.finished): break
         return features
-
-    def unpickleFile(self, fileName):
-        fileName = 'Data/ProcessedData/'+fileName
-        f = open(fileName, "rb")
-        data = pickle.load(f)
-        return data
-
-
